@@ -1,6 +1,7 @@
 package goro
 
 import (
+	"context"
 	"github.com/kamilov/goro/reader"
 	"github.com/kamilov/goro/writer"
 	"net/http"
@@ -33,6 +34,12 @@ func (c *Context) init(request *http.Request, response http.ResponseWriter) {
 	c.offset = -1
 
 	c.SetDataWriter(&writer.DefaultWriter{})
+}
+
+// WithContext change the current request context
+func (c *Context) WithContext(ctx context.Context) *Context {
+	c.request = c.request.WithContext(ctx)
+	return c
 }
 
 // Request returns the current request.
