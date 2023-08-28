@@ -8,7 +8,7 @@ import (
 )
 
 type Router struct {
-	*Group
+	*RouteGroup
 	pool                sync.Pool
 	stores              map[string]*store
 	routes              map[string]*Route
@@ -23,7 +23,7 @@ func New() *Router {
 		routes: make(map[string]*Route),
 		stores: make(map[string]*store),
 	}
-	r.Group = &Group{
+	r.RouteGroup = &RouteGroup{
 		router:   r,
 		prefix:   "",
 		handlers: make([]Handler, 0),
@@ -81,7 +81,7 @@ func (r *Router) Route(name string) *Route {
 }
 
 func (r *Router) Use(handlers ...Handler) *Router {
-	r.Group.Use(handlers...)
+	r.RouteGroup.Use(handlers...)
 	r.notFoundHandlers = combineHandlers(r.handlers, r.notFoundHandlers)
 
 	return r

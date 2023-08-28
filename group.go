@@ -5,26 +5,26 @@ import (
 	"strings"
 )
 
-type Group struct {
+type RouteGroup struct {
 	router   *Router
 	prefix   string
 	handlers []Handler
 }
 
-func (g *Group) Group(prefix string, handlers ...Handler) *Group {
-	return &Group{
+func (g *RouteGroup) Group(prefix string, handlers ...Handler) *RouteGroup {
+	return &RouteGroup{
 		router:   g.router,
 		prefix:   g.prefix + "/" + strings.TrimLeft(prefix, "/"),
 		handlers: combineHandlers(handlers, g.handlers),
 	}
 }
 
-func (g *Group) Use(handlers ...Handler) *Group {
+func (g *RouteGroup) Use(handlers ...Handler) *RouteGroup {
 	g.handlers = append(g.handlers, handlers...)
 	return g
 }
 
-func (g *Group) Add(path string, handlers ...Handler) *Route {
+func (g *RouteGroup) Add(path string, handlers ...Handler) *Route {
 	return &Route{
 		group:    g,
 		path:     path,
@@ -32,52 +32,52 @@ func (g *Group) Add(path string, handlers ...Handler) *Route {
 	}
 }
 
-func (g *Group) Get(path string, handlers ...Handler) *Group {
+func (g *RouteGroup) Get(path string, handlers ...Handler) *RouteGroup {
 	g.add(http.MethodGet, path, handlers)
 	return g
 }
 
-func (g *Group) Post(path string, handlers ...Handler) *Group {
+func (g *RouteGroup) Post(path string, handlers ...Handler) *RouteGroup {
 	g.add(http.MethodPost, path, handlers)
 	return g
 }
 
-func (g *Group) Put(path string, handlers ...Handler) *Group {
+func (g *RouteGroup) Put(path string, handlers ...Handler) *RouteGroup {
 	g.add(http.MethodPut, path, handlers)
 	return g
 }
 
-func (g *Group) Patch(path string, handlers ...Handler) *Group {
+func (g *RouteGroup) Patch(path string, handlers ...Handler) *RouteGroup {
 	g.add(http.MethodPatch, path, handlers)
 	return g
 }
 
-func (g *Group) Delete(path string, handlers ...Handler) *Group {
+func (g *RouteGroup) Delete(path string, handlers ...Handler) *RouteGroup {
 	g.add(http.MethodDelete, path, handlers)
 	return g
 }
 
-func (g *Group) Connect(path string, handlers ...Handler) *Group {
+func (g *RouteGroup) Connect(path string, handlers ...Handler) *RouteGroup {
 	g.add(http.MethodConnect, path, handlers)
 	return g
 }
 
-func (g *Group) Head(path string, handlers ...Handler) *Group {
+func (g *RouteGroup) Head(path string, handlers ...Handler) *RouteGroup {
 	g.add(http.MethodHead, path, handlers)
 	return g
 }
 
-func (g *Group) Options(path string, handlers ...Handler) *Group {
+func (g *RouteGroup) Options(path string, handlers ...Handler) *RouteGroup {
 	g.add(http.MethodOptions, path, handlers)
 	return g
 }
 
-func (g *Group) Trace(path string, handlers ...Handler) *Group {
+func (g *RouteGroup) Trace(path string, handlers ...Handler) *RouteGroup {
 	g.add(http.MethodTrace, path, handlers)
 	return g
 }
 
-func (g *Group) Any(path string, handlers ...Handler) *Group {
+func (g *RouteGroup) Any(path string, handlers ...Handler) *RouteGroup {
 	methods := []string{
 		http.MethodGet,
 		http.MethodPost,
@@ -97,7 +97,7 @@ func (g *Group) Any(path string, handlers ...Handler) *Group {
 	return g
 }
 
-func (g *Group) To(methods, path string, handlers ...Handler) *Group {
+func (g *RouteGroup) To(methods, path string, handlers ...Handler) *RouteGroup {
 	m := strings.Split(methods, ",")
 
 	if len(methods) == 1 {
@@ -111,7 +111,7 @@ func (g *Group) To(methods, path string, handlers ...Handler) *Group {
 	return g
 }
 
-func (g *Group) add(method, path string, handlers []Handler) {
+func (g *RouteGroup) add(method, path string, handlers []Handler) {
 	g.router.add(method, path, combineHandlers(g.handlers, handlers))
 }
 

@@ -8,7 +8,7 @@ import (
 )
 
 type Route struct {
-	group    *Group
+	group    *RouteGroup
 	path     string
 	name     string
 	handlers []Handler
