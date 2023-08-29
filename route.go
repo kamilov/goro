@@ -30,7 +30,7 @@ func (r *Route) Name(name string) *Route {
 }
 
 func (r *Route) Path() string {
-	return r.group.prefix + r.path
+	return r.group.prefix + "/" + strings.TrimLeft(r.path, "/")
 }
 
 func (r *Route) Generate(values ...any) (result string) {
